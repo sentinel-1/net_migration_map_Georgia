@@ -40,7 +40,7 @@ print(f"\nNotebook START time: {nb_st} UTC\n")
 # In[2]:
 
 
-get_ipython().run_cell_magic('HTML', '', '<script>\n  function code_toggle() {\n    if (code_shown) {\n      $(\'div.input\').hide(\'500\');\n      $(\'#toggleButton\').val(\'Show Python Code\')\n    } else {\n      $(\'div.input\').show(\'500\');\n      $(\'#toggleButton\').val(\'Hide Python Code\')\n    }\n    code_shown = !code_shown\n  }\n\n  $( document ).ready(function(){\n    code_shown=false;\n    $(\'div.input\').hide();\n    $(\'div.input:contains("%%HTML")\').removeClass( "input")\n  });\n</script>\n<form action="javascript:code_toggle()"><input type="submit" id="toggleButton" value="Show Python Code"></form>\n')
+get_ipython().run_cell_magic('HTML', '', '<script>\n  function code_toggle() {\n    if (code_shown){\n      $(\'div.input\').hide(\'500\');\n      $(\'#toggleButton\').val(\'Show Python Code\')\n    } else {\n      $(\'div.input\').show(\'500\');\n      $(\'#toggleButton\').val(\'Hide Python Code\')\n    }\n    code_shown = !code_shown\n  }\n\n  $( document ).ready(function(){\n    code_shown=false;\n    $(\'div.input\').hide();\n    $(\'div.input:contains("%%HTML")\').removeClass( "input")\n  });\n</script>\n<form action="javascript:code_toggle()">\n  <input type="submit" id="toggleButton" value="Show Python Code">\n</form>\n')
 
 
 # In[3]:
@@ -48,12 +48,13 @@ get_ipython().run_cell_magic('HTML', '', '<script>\n  function code_toggle() {\n
 
 import numpy as np
 import pandas as pd
-from IPython.display import display
+from IPython.display import display, HTML
 import geopandas
 import warnings
 import io
 import json
 import folium
+import branca.colormap as cmp
 from folium.plugins import Fullscreen
 
 
@@ -66,15 +67,37 @@ VERBOSE = False
 # In[5]:
 
 
-migration_df = pd.read_csv("data/geostat/EN/CSV/Migration.csv", skiprows=2, index_col="citizenship").head(-2).astype(int)
+migration_df = pd.read_csv(
+    "data/geostat/EN/CSV/Migration.csv",
+    skiprows=2,
+    index_col="citizenship"
+).head(-2).astype(int)
 
 migration_df = migration_df.T.assign(
-    Year=lambda df:pd.Series([str(x).strip().split()[0] for x in df.index], index=df.index).astype(int),
-    MigrantType=lambda df:pd.Series([str(x).strip().split()[1].strip() for x in df.index], index=df.index).replace({
+    Year=lambda df: pd.Series(
+        [
+            str(x).strip().split()[0]
+            for x in df.index
+        ],
+        index=df.index
+    ).astype(int),
+    MigrantType=lambda df: pd.Series(
+        [
+            str(x).strip().split()[1].strip()
+            for x in df.index
+        ],
+        index=df.index
+    ).replace({
         'Immigrants': 'Immigrant',
         'Emigrants': 'Emigrant'
     }).astype('category'),
-    Sex=lambda df:pd.Series([str(x).strip().split()[-1].strip() for x in df.index], index=df.index).replace({
+    Sex=lambda df: pd.Series(
+        [
+            str(x).strip().split()[-1].strip()
+            for x in df.index
+        ],
+        index=df.index
+    ).replace({
         'Males': 'Male',
         'Females': 'Female',
         'sexes': 'All'
@@ -84,8 +107,7 @@ migration_df = migration_df.T.assign(
 start_year, end_year = migration_df['Year'].min(), migration_df['Year'].max()
 
 print("\nGiven migration data covers the interval of time"
-      f" from {start_year}"
-      f" to {end_year} (inclusive).\n")
+      f" from {start_year} to {end_year} (inclusive).\n")
 
 if VERBOSE:
     display(migration_df)
@@ -94,18 +116,31 @@ if VERBOSE:
 # In[6]:
 
 
-not_country_names = ('Stateless', 'Not stated', 'Other', 'Total',)
+NOT_COUNTRY_NAMES = ('Stateless', 'Not stated', 'Other', 'Total',)
 
-def calculate_net_migration_by_citizenship(df: pd.DataFrame, Sex: str='All') -> pd.DataFrame:
-    assert Sex in df['Sex'].cat.categories, f'Data not found for the Sex="{Sex}" filter, available categories are: {", ".join(list(df["Sex"].cat.categories))}.'
+def get_net_migration_by_citizenship_df(df: pd.DataFrame,
+                                        Sex: str = 'All') -> pd.DataFrame:
+    assert Sex in df['Sex'].cat.categories, (
+        'Data not found for the Sex="{Sex}" filter, available categories are: '
+        f'{", ".join(list(df["Sex"].cat.categories))}.')
     df = pd.DataFrame({
-        'Immigrant': df.loc[(df['Sex'] == Sex) & (df['MigrantType'] == 'Immigrant'), df.columns.difference(['Year'])].sum(numeric_only=True),
-        'Emigrant': df.loc[(df['Sex'] == Sex) & (df['MigrantType'] == 'Emigrant'), df.columns.difference(['Year'])].sum(numeric_only=True)
+        'Immigrant': df.loc[
+            (df['Sex'] == Sex) & (df['MigrantType'] == 'Immigrant'),
+            df.columns.difference(['Year'])
+        ].sum(numeric_only=True),
+        'Emigrant': df.loc[
+            (df['Sex'] == Sex) & (df['MigrantType'] == 'Emigrant'),
+            df.columns.difference(['Year'])
+        ].sum(numeric_only=True)
     })
     df = (df['Immigrant'] - df['Emigrant']).reset_index(name='NetMigration')
     df = pd.concat([
-        df.loc[~df['citizenship'].isin(not_country_names)].sort_values(by='NetMigration', ascending=False),
-        df.loc[df['citizenship'].isin(not_country_names)].sort_values(by='NetMigration', ascending=False)
+        df.loc[
+            ~df['citizenship'].isin(NOT_COUNTRY_NAMES)
+        ].sort_values(by='NetMigration', ascending=False),
+        df.loc[
+            df['citizenship'].isin(NOT_COUNTRY_NAMES)
+        ].sort_values(by='NetMigration', ascending=False)
     ]).reset_index(drop=True)
     return df
 
@@ -116,10 +151,12 @@ def calculate_net_migration_by_citizenship(df: pd.DataFrame, Sex: str='All') -> 
 net_migration = {}
 
 for Sex in ("Female", "Male", "All"):
-    net_migration[Sex] = calculate_net_migration_by_citizenship(migration_df, Sex=Sex)
+    net_migration[Sex] = get_net_migration_by_citizenship_df(migration_df,
+                                                             Sex=Sex)
 
     if VERBOSE:
-        print(f"\n{start_year}-{end_year} Net Migration of Georgia by citizenship for sex=\"{Sex}\":\n")
+        print(f"\n{start_year}-{end_year} Net Migration of Georgia "
+              f"by citizenship for sex=\"{Sex}\":\n")
         display(net_migration[Sex])
 
 
@@ -129,30 +166,63 @@ for Sex in ("Female", "Male", "All"):
 if VERBOSE:
     
     for Sex in ("Female", "Male", "All"):
-        print(f'\nDescriptive statistics of the full {start_year}-{end_year} Net Migration data for Sex="{Sex}":\n')
-        display(net_migration[Sex].loc[net_migration[Sex]['citizenship'] != 'Total'].describe())
-        print(f'\nDescriptive statistics of the positive values having identifiable citizenship from the {start_year}-{end_year} Net Migration data for Sex="{Sex}":\n')
-        display(net_migration[Sex].loc[(net_migration[Sex]['NetMigration'] > 0) & (~net_migration[Sex]['citizenship'].isin(not_country_names)),'NetMigration'].describe())
-        print(f'\nDescriptive statistics of the negative values having identifiable citizenship from the {start_year}-{end_year} Net Migration data for Sex="{Sex}":\n')
-        display(net_migration[Sex].loc[(net_migration[Sex]['NetMigration'] < 0) & (~net_migration[Sex]['citizenship'].isin(not_country_names)),'NetMigration'].describe())
+        print('\nDescriptive statistics of the '
+              f'full {start_year}-{end_year} '
+              f'Net Migration data for Sex="{Sex}":\n')
+        display(
+            net_migration[Sex].loc[
+                net_migration[Sex]['citizenship'] != 'Total'
+            ].describe()
+        )
+        print('\nDescriptive statistics of the positive values '
+              'having identifiable citizenship '
+              f'from the {start_year}-{end_year} Net Migration data '
+              f'for Sex="{Sex}":\n')
+        display(
+            net_migration[Sex].loc[
+                (net_migration[Sex]['NetMigration'] > 0) & 
+                (~net_migration[Sex]['citizenship'].isin(NOT_COUNTRY_NAMES)),
+                'NetMigration'
+            ].describe()
+        )
+        print('\nDescriptive statistics of the negative values '
+              'having identifiable citizenship '
+              f'from the {start_year}-{end_year} Net Migration data '
+              f'for Sex="{Sex}":\n')
+        display(
+            net_migration[Sex].loc[
+                (net_migration[Sex]['NetMigration'] < 0) &
+                (~net_migration[Sex]['citizenship'].isin(NOT_COUNTRY_NAMES)),
+                'NetMigration'
+            ].describe()
+        )
         print('\n\n\n')
 
 
 # In[9]:
 
 
-countries_geodf = geopandas.read_file('data/naturalearth/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp')
+countries_geodf = geopandas.read_file(
+    'data/naturalearth/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp'
+)
 
 
 # In[10]:
 
 
-def number_of_mismatched_names(df: pd.DataFrame, geodf: pd.DataFrame=countries_geodf) -> int:
-    mismatch = df.loc[(~df['citizenship'].isin(geodf['NAME'])) & (~df['citizenship'].isin(not_country_names)),'citizenship']
+def number_of_mismatched_names(
+        df: pd.DataFrame,
+        geodf: geopandas.GeoDataFrame = countries_geodf) -> int:
+    mismatch = df.loc[
+        (~df['citizenship'].isin(geodf['NAME'])) &
+        (~df['citizenship'].isin(NOT_COUNTRY_NAMES)),
+        'citizenship'
+    ]
     N = len(mismatch)
     
     if VERBOSE:
-        print(f'Number of mismatched names between map data and statistic data is: {N}')
+        print('Number of mismatched names between map data and '
+              f'statistic data is: {N}')
     
         if N > 0:
             print(f'Mismatched names: {[name for name in mismatch]}')
@@ -169,10 +239,15 @@ pass
 # In[12]:
 
 
+def search_in_countries_geodf(substring: str) -> pd.Series:
+    return countries_geodf.loc[countries_geodf['NAME'].str.contains(substring),
+                               'NAME']
+
 if VERBOSE:
-    print("Searching for equivalents used by the map data for the mismatched names detected above: ")
-    print(countries_geodf.loc[countries_geodf['NAME'].str.contains('Russ'),'NAME'])
-    print(countries_geodf.loc[countries_geodf['NAME'].str.contains('Iran'),'NAME'])
+    print("Searching for equivalents used by the map data "
+          "for the mismatched names detected above: ")
+    print(search_in_countries_geodf('Russ'))
+    print(search_in_countries_geodf('Iran'))
 
 
 # In[13]:
@@ -189,8 +264,10 @@ for Sex in ("Female", "Male", "All"):
     net_migration[Sex] = fix_mismatched_names(net_migration[Sex])
     
     if VERBOSE:
-        print(f'Replaced mismatched names in the data for Sex="{Sex}":\n - ', end="")
-    assert number_of_mismatched_names(net_migration[Sex]) == 0, "ERROR: Please resolve name mismatch first..."
+        print('Replaced mismatched names in the data '
+              f'for Sex="{Sex}":\n - ', end="")
+    assert number_of_mismatched_names(net_migration[Sex]) == 0, "ERROR:\
+ Please resolve name mismatch first..."
 
 
 # In[14]:
@@ -211,25 +288,24 @@ countries_geojson['features'] += sandwitch_geojson['features']
 # In[15]:
 
 
-import branca.colormap as cmp
+min_value = min([net_migration[Sex]['NetMigration'].min()
+                 for Sex in ("Female", "Male", "All")])
 
-min_value = min([net_migration[Sex]['NetMigration'].min() for Sex in ("Female", "Male", "All")])
-max_value = max([net_migration[Sex]['NetMigration'].max() for Sex in ("Female", "Male", "All")])
+max_value = max([net_migration[Sex]['NetMigration'].max()
+                 for Sex in ("Female", "Male", "All")])
 
 color_scale = cmp.LinearColormap(
     ['red', '#ffcccd', '#ccffcd', 'green'],
-    index=[min_value,0,0,max_value],
+    index=[min_value, 0, 0, max_value],
     vmin=min_value, vmax=max_value,
     # caption=f'{start_year}-{end_year} Net Migration of Georgia by Citizenship'
 )
 
 
-def get_map_color(NAME:str, Sex:str) -> str:
-    x = net_migration[Sex].loc[net_migration[Sex]['citizenship']==NAME,'NetMigration']
-    
-    if len(x) == 0:
-        return '#000000'
-    return color_scale(x.item())
+def get_map_color(NAME: str, Sex: str) -> str:
+    x = net_migration[Sex].loc[net_migration[Sex]['citizenship']==NAME,
+                               'NetMigration']
+    return color_scale(x.item()) if len(x) else '#000000'
 
 
 if VERBOSE:
@@ -240,45 +316,48 @@ if VERBOSE:
 # In[16]:
 
 
-def _num_to_str(n: int) -> str:
-    return f"{'+' if n > 0 else ''}{n}"
-
-
 def get_net_migration_tooltip_by_citizenship(citizenship: str) -> str:
-    tooltip = f'&quot;{start_year}-{end_year} Net Migration of Georgia&quot;<br>'
+    tooltip = (f'&quot;{start_year}-{end_year} '
+               'Net Migration of Georgia&quot;<br>')
     
     n_female, n_male,  n_all = [
-        (lambda df:df.loc[df['citizenship']==citizenship, 'NetMigration'])(net_migration[Sex])
+        (lambda df: df.loc[df['citizenship']==citizenship,
+                           'NetMigration'])(
+            net_migration[Sex])
         for Sex in ("Female", "Male", "All")
     ]
     
-    if citizenship in not_country_names:
+    if citizenship in NOT_COUNTRY_NAMES:
         tooltip += {
             'Stateless': '<strong>Stateless persons</strong>',
             'Not stated': 'Citizenship <strong>not stated</strong>',
             'Other': '<strong>Other</strong> (citizenship not given)',
-            'Total': '<strong>Total Net Migration of Georgia</strong>'
+            'Total': '<strong>Total Net Migration of Georgia</strong>',
         }[citizenship]
     else:
-        tooltip += f"Migrated citizens of <strong>{citizenship}</strong> in Georgia"
+        tooltip += ("Migrated citizens of "
+                    f"<strong>{citizenship}</strong> in Georgia")
     tooltip += ': <br>'
     
     if len(n_all) == 0:
         tooltip += "Not given (included in \"Other\")"
     else:
-        tooltip += f"<strong>{_num_to_str(n_all.item())}</strong> "
+        tooltip += f"<strong>{n_all.item():+}</strong> "
         n_male = n_male.item() if len(n_male) else 0
         n_female = n_female.item() if len(n_female) else 0
         
-        if  abs(n_male) > abs(n_female):
-            tooltip += f"(Male: {_num_to_str(n_male)}, Female: {_num_to_str(n_female)})"
+        if abs(n_male) > abs(n_female):
+            tooltip += f"(Male: {n_male:+}, Female: {n_female:+})"
         else:
-            tooltip += f"(Female: {_num_to_str(n_female)}, Male: {_num_to_str(n_male)})"
+            tooltip += f"(Female: {n_female:+}, Male: {n_male:+})"
     return tooltip
 
 
 if VERBOSE:
-    display(get_net_migration_tooltip_by_citizenship("Georgia"), get_net_migration_tooltip_by_citizenship("Antarctica"))
+    print("\nExamples of tooltips:\n")
+    display(HTML("<p>{}</p><p>{}</p><br>".format(
+        get_net_migration_tooltip_by_citizenship("Georgia"),
+        get_net_migration_tooltip_by_citizenship("Antarctica"))))
 
 
 # ## Choropleth Map of the Net Migration of Georgia by Citizenship
@@ -302,7 +381,7 @@ m = folium.Map(location=tbilisi_coordinate, zoom_start=6)
 
 color_scale.add_to(m)
 
-Sex=(
+Sex = (
     "Female",  # 0
     "Male",  # 1
     "All"  # 2
@@ -320,13 +399,17 @@ m_layer = folium.GeoJson(
         'nanFillOpacity': 0.4,
         'lineOpacity': 0.2,
     },
-    name='Net Migration of Georgia by citizenship' + (f' (Sex="{Sex}")' if Sex!="All" else ''),
+    name='Net Migration of Georgia by citizenship' + (
+        f' (Sex="{Sex}")' if Sex!="All" else ''
+    ),
     # zoom_on_click=True,
     # show=Sex=="All",
 )
 
 for feature in geojson['features']:
-    feature['properties']['tooltip_msg'] = get_net_migration_tooltip_by_citizenship(feature['properties']['NAME'])
+    feature['properties'][
+        'tooltip_msg'
+    ] = get_net_migration_tooltip_by_citizenship(feature['properties']['NAME'])
 folium.GeoJsonTooltip(
     fields=["tooltip_msg"],
     labels=False
@@ -339,7 +422,9 @@ for feature in sandwitch_geojson['features']:
         icon=folium.DivIcon(
             icon_size=(20,20),
             icon_anchor=(0,0),
-            html='<div style="font-size: inherit; color:#333333; white-space:nowrap;"><b>%s</b></div>' % feature['properties']['NAME'],
+            html=('<div style="font-size: inherit; color:#333333; '
+                  'white-space:nowrap;"><b>{:s}</b></div>').format(
+                      feature['properties']['NAME']),
             class_name="div-icon-text"
         )
     ).add_to(m_layer)
@@ -363,12 +448,13 @@ m.get_root().html.add_child(folium.Element("""
 """))
 m.get_root().html.add_child(folium.Element(f"""
 <script type="text/javascript">
-window.onload = ()=>{{
-    let zoomText = ()=>{{
-        $(".div-icon-text").css("font-size", (0.02*{m.get_name()}.getZoom()**2)+"em");
+window.onload = () => {{
+    let zoomText = () => {{
+        $(".div-icon-text")
+            .css("font-size", (0.02 * {m.get_name()}.getZoom()**2) + "em");
     }};
     zoomText();
-    {m.get_name()}.on("zoomend", ()=>{{zoomText();}});
+    {m.get_name()}.on("zoomend", () => {{zoomText();}});
 }};
 </script>
 """))
