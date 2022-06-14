@@ -54,6 +54,7 @@ import warnings
 import io
 import json
 import folium
+from folium.plugins import Fullscreen
 
 
 # In[4]:
@@ -346,10 +347,21 @@ m_layer.add_to(m)
 
 
 
-m.get_root().html.add_child(folium.Element(f"""
+m.get_root().html.add_child(folium.Element("""
 <style>
-
+@media (max-width: 500px) {
+    .leaflet-right .legend {
+        visibility: hidden;
+    }
+}
+@media (max-width: 288px) {
+    .leaflet-right {
+        display: none;
+    }
+}
 </style>
+"""))
+m.get_root().html.add_child(folium.Element(f"""
 <script type="text/javascript">
 window.onload = ()=>{{
     let zoomText = ()=>{{
@@ -361,7 +373,7 @@ window.onload = ()=>{{
 </script>
 """))
 folium.LayerControl().add_to(m)
-
+Fullscreen().add_to(m)
 
 
 display(m)
