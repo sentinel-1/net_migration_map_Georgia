@@ -183,6 +183,7 @@ def fix_mismatched_names(df: pd.DataFrame) -> pd.DataFrame:
         'Iran, Islamic Republic of': 'Iran',
     })
 
+
 for Sex in ("Female", "Male", "All"):
     net_migration[Sex] = fix_mismatched_names(net_migration[Sex])
     
@@ -214,35 +215,25 @@ import branca.colormap as cmp
 min_value = min([net_migration[Sex]['NetMigration'].min() for Sex in ("Female", "Male", "All")])
 max_value = max([net_migration[Sex]['NetMigration'].max() for Sex in ("Female", "Male", "All")])
 
-linear_positive_color = cmp.LinearColormap(
-    ['#ccffcd', 'green'],
-    vmin=0, vmax=max_value,
-    caption=f'Positive number color scale of {start_year}-{end_year} Net Migration of Georgia'
+color_scale = cmp.LinearColormap(
+    ['red', '#ffcccd', '#ccffcd', 'green'],
+    index=[min_value,0,0,max_value],
+    vmin=min_value, vmax=max_value,
+    # caption=f'{start_year}-{end_year} Net Migration of Georgia by Citizenship'
 )
 
-linear_negative_color = cmp.LinearColormap(
-    ['red','#ffcccd'],
-    vmin=min_value, vmax=0,
-    caption=f'Negative number color scale of {start_year}-{end_year} Net Migration of Georgia'
-)
 
 def get_map_color(NAME:str, Sex:str) -> str:
     x = net_migration[Sex].loc[net_migration[Sex]['citizenship']==NAME,'NetMigration']
     
     if len(x) == 0:
         return '#000000'
-    x = x.item()
-    
-    if x < 0:
-        return linear_negative_color(x)
-    return linear_positive_color(x)
+    return color_scale(x.item())
 
 
 if VERBOSE:
-    print("Color scale for negative numbers:")
-    display(linear_negative_color)
-    print("Color scale for positive numbers:")
-    display(linear_positive_color)
+    print("Color scale:")
+    display(color_scale)
 
 
 # In[16]:
@@ -250,6 +241,7 @@ if VERBOSE:
 
 def _num_to_str(n: int) -> str:
     return f"{'+' if n > 0 else ''}{n}"
+
 
 def get_net_migration_tooltip_by_citizenship(citizenship: str) -> str:
     tooltip = f'&quot;{start_year}-{end_year} Net Migration of Georgia&quot;<br>'
@@ -307,8 +299,7 @@ if VERBOSE:
 tbilisi_coordinate = [41.69339329182433, 44.80151746492941]
 m = folium.Map(location=tbilisi_coordinate, zoom_start=6)
 
-linear_negative_color.add_to(m)
-linear_positive_color.add_to(m)
+color_scale.add_to(m)
 
 Sex=(
     "Female",  # 0
@@ -356,6 +347,9 @@ m_layer.add_to(m)
 
 
 m.get_root().html.add_child(folium.Element(f"""
+<style>
+
+</style>
 <script type="text/javascript">
 window.onload = ()=>{{
     let zoomText = ()=>{{
