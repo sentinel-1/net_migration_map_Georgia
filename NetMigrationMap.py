@@ -6,16 +6,6 @@
 # Purpose of this notebook is to create a choropleth world map reflecting a net migration of Georgia by citizenship over long period of time (period of time depends on the data available). Two different color scales are used, red and green, the red color scale is used for highlighting countries if the net migration in Georgia is a negative number for their citizens and the green color scale is used for highlighting countries if the net migration in Georgia is a positive number for their citizens.
 # 
 # 
-# Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
-# - **Stateless** bar: Shows net migration of stateless persons who do not have citizenship of any country.
-# - **Not stated** bar: Shows net migration of persons whos citizenship is not indicated in the data.
-# - **Other** bar: Shows net migration of persons who were identified as citizens of some particular country other than the ones listed by the Geostat in the published data.
-# - **Total** bar: Shows total net migration of Georgia over the given period of time which include all the migrants regardless of citizenship.
-# 
-# *Tip: Hover the bars or different countries in the given choropleth map with your mouse in order to get a tooltip showing the relevant details.*
-# 
-# 
-# 
 # 
 # Definitions:
 #  - **Immigrant** (as defined by the Geostat for the data used here) – "a person recorded when crossing the National border i) who entered the country and has cumulated a
@@ -297,6 +287,19 @@ def get_net_migration_tooltip_by_citizenship(citizenship: str) -> str:
 if VERBOSE:
     display(get_net_migration_tooltip_by_citizenship("Georgia"), get_net_migration_tooltip_by_citizenship("Antarctica"))
 
+
+# ## Choropleth Map of the Net Migration of Georgia by Citizenship
+# 
+# 
+# Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
+# - **Stateless** bar: Shows net migration of stateless persons who do not have citizenship of any country.
+# - **Not stated** bar: Shows net migration of persons whos citizenship is not indicated in the data.
+# - **Other** bar: Shows net migration of persons who were identified as citizens of some particular country other than the ones listed by the Geostat in the published data.
+# - **Total** bar: Shows total net migration of Georgia over the given period of time which include all the migrants regardless of citizenship.
+# 
+# *Tip: Hover the bars or different countries in the given choropleth map with your mouse in order to get a tooltip showing the relevant details.*
+# 
+# 
 
 # In[17]:
 
