@@ -1,0 +1,137 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Stateless"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.26,
+              42.36
+            ],
+            [
+              41.26,
+              42.36
+            ],
+            [
+              41.26,
+              42.59
+            ],
+            [
+              39.26,
+              42.59
+            ],
+            [
+              39.26,
+              42.36
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Not stated"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.26,
+              42.12
+            ],
+            [
+              41.26,
+              42.12
+            ],
+            [
+              41.26,
+              42.34
+            ],
+            [
+              39.26,
+              42.34
+            ],
+            [
+              39.26,
+              42.12
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Other"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.26,
+              41.87
+            ],
+            [
+              41.26,
+              41.87
+            ],
+            [
+              41.26,
+              42.09
+            ],
+            [
+              39.26,
+              42.09
+            ],
+            [
+              39.26,
+              41.87
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Total"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.26,
+              41.62
+            ],
+            [
+              41.26,
+              41.62
+            ],
+            [
+              41.26,
+              41.84
+            ],
+            [
+              39.26,
+              41.84
+            ],
+            [
+              39.26,
+              41.62
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
