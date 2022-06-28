@@ -11,13 +11,45 @@
 
 
 from IPython.display import display, HTML, IFrame
+display(HTML("""
+<style>
+.loader {
+  border: 12px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 12px solid #adcaa1;
+  width: 86px;
+  height: 86px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  position: absolute;
+  left: 50%;
+  margin-left: -43px;
+  top: 50%;
+  margin-top: -43px;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+"""))
 
 map_html = HTML(
     '<div style="position:relative;width:100%;height:0;padding-bottom:60%;"'
-    '  id="net-migration-map-container" >')
+    '  id="net-migration-map-container" >'
+    '<div class="loader" id="map-loading-spinner"></div>'
+)
 map_html.data += IFrame(src="map.html", width='100%', height='100%', extras=[
     'style="position:absolute;width:100%;height:100%;left:0;top:0;'
     'border:none !important;"', 'allowfullscreen',
+    '''onload="javascript:document.getElementById('map-loading-spinner').style.display='none';'''
 ])._repr_html_() + '</div>'
 display(map_html)
 
