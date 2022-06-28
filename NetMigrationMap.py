@@ -44,12 +44,12 @@ display(HTML("""
 map_html = HTML(
     '<div style="position:relative;width:100%;height:0;padding-bottom:60%;"'
     '  id="net-migration-map-container" >'
-    '<div class="loader" id="map-loading-spinner"></div>'
+    '<div class="loader" id="net-migration-map-spinner"></div>'
 )
 map_html.data += IFrame(src="map.html", width='100%', height='100%', extras=[
     'style="position:absolute;width:100%;height:100%;left:0;top:0;'
     'border:none !important;"', 'allowfullscreen',
-    '''onload="javascript:document.getElementById('map-loading-spinner').style.display='none';'''
+    '''onload="javascript:document.getElementById('net-migration-map-spinner').style.display='none';"'''
 ])._repr_html_() + '</div>'
 display(map_html)
 
