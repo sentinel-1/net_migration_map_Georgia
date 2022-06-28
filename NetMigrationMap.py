@@ -1,9 +1,29 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# ## Net Migration Map of Georgia by Citizenship
+# 
+# *Tip: Hover the bars or different countries in the given choropleth map with your mouse in order to get a tooltip showing the relevant details.*
+# 
+# 
+
+# In[1]:
+
+
+from IPython.display import display, HTML
+display(HTML("""<div id="net-migration-map-container"></div>"""))
+
+
+# \* Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map above in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
+# - **Stateless** bar: Shows net migration of stateless persons who do not have citizenship of any country.
+# - **Not stated** bar: Shows net migration of persons whos citizenship is not stated in the data.
+# - **Other** bar: Shows net migration of persons who were identified as citizens of some particular country other than the ones listed by the Geostat in the published data.
+# - **Total** bar: Shows total net migration of Georgia over the given period of time which include all the migrants regardless of citizenship.
+
+# 
 # # Net Migration of Georgia
 # 
-# Purpose of this notebook is to create a choropleth world map reflecting a net migration of Georgia by citizenship over long period of time (period of time depends on the data available). Two different color scales are used, red and green, the red color scale is used for highlighting countries if the net migration in Georgia is a negative number for their citizens and the green color scale is used for highlighting countries if the net migration in Georgia is a positive number for their citizens.
+# Purpose of this notebook is to create a choropleth world map reflecting a net migration of Georgia by citizenship over long period of time (period of time depends on the data available). The resulting map is displayed above. Two different color scales are used, red and green, the red color scale is used for highlighting countries if the net migration in Georgia is a negative number for their respective citizens and the green color scale is used in a same way but for positive numbers. Color (red/green) and the color intensity are assigned automatically based on the relevant statistics.
 # 
 # 
 # 
@@ -29,7 +49,7 @@
 # 
 # 
 
-# In[1]:
+# In[2]:
 
 
 from datetime import datetime, timedelta
@@ -37,18 +57,17 @@ nb_st = datetime.utcnow()
 print(f"\nNotebook START time: {nb_st} UTC\n")
 
 
-# In[2]:
+# In[3]:
 
 
 get_ipython().run_cell_magic('HTML', '', '<script>\n  function code_toggle() {\n    if (code_shown){\n      $(\'div.input\').hide(\'500\');\n      $(\'#toggleButton\').val(\'Show Python Code\')\n    } else {\n      $(\'div.input\').show(\'500\');\n      $(\'#toggleButton\').val(\'Hide Python Code\')\n    }\n    code_shown = !code_shown\n  }\n\n  $( document ).ready(function(){\n    code_shown=false;\n    $(\'div.input\').hide();\n    $(\'div.input:contains("%%HTML")\').removeClass( "input")\n    $(\'div.input:contains("%%capture")\').removeClass("input")\n  });\n</script>\n<form action="javascript:code_toggle()">\n  <input type="submit" id="toggleButton" value="Show Python Code">\n</form>\n')
 
 
-# In[3]:
+# In[4]:
 
 
 import numpy as np
 import pandas as pd
-from IPython.display import display, HTML
 import geopandas
 import warnings
 import io
@@ -56,15 +75,16 @@ import json
 import folium
 import branca.colormap as cmp
 from folium.plugins import Fullscreen
+from folium.utilities import normalize
 
 
-# In[4]:
+# In[5]:
 
 
 VERBOSE = False
 
 
-# In[5]:
+# In[6]:
 
 
 migration_df = pd.read_csv(
@@ -113,7 +133,7 @@ if VERBOSE:
     display(migration_df)
 
 
-# In[6]:
+# In[7]:
 
 
 NOT_COUNTRY_NAMES = ('Stateless', 'Not stated', 'Other', 'Total',)
@@ -145,7 +165,7 @@ def get_net_migration_by_citizenship_df(df: pd.DataFrame,
     return df
 
 
-# In[7]:
+# In[8]:
 
 
 net_migration = {}
@@ -160,7 +180,7 @@ for Sex in ("Female", "Male", "All"):
         display(net_migration[Sex])
 
 
-# In[8]:
+# In[9]:
 
 
 if VERBOSE:
@@ -199,7 +219,7 @@ if VERBOSE:
         print('\n\n\n')
 
 
-# In[9]:
+# In[10]:
 
 
 countries_geodf = geopandas.read_file(
@@ -207,7 +227,7 @@ countries_geodf = geopandas.read_file(
 )
 
 
-# In[10]:
+# In[11]:
 
 
 def number_of_mismatched_names(
@@ -229,14 +249,14 @@ def number_of_mismatched_names(
     return N
 
 
-# In[11]:
+# In[12]:
 
 
 number_of_mismatched_names(net_migration["All"])
 pass
 
 
-# In[12]:
+# In[13]:
 
 
 def search_in_countries_geodf(substring: str) -> pd.Series:
@@ -250,7 +270,7 @@ if VERBOSE:
     print(search_in_countries_geodf('Iran'))
 
 
-# In[13]:
+# In[14]:
 
 
 def fix_mismatched_names(df: pd.DataFrame) -> pd.DataFrame:
@@ -270,7 +290,7 @@ for Sex in ("Female", "Male", "All"):
  Please resolve name mismatch first..."
 
 
-# In[14]:
+# In[15]:
 
 
 with io.BytesIO() as buffer:
@@ -285,7 +305,7 @@ with open("black_sea_sandwitch.json") as f:
 countries_geojson['features'] += sandwitch_geojson['features']
 
 
-# In[15]:
+# In[16]:
 
 
 min_value = min([net_migration[Sex]['NetMigration'].min()
@@ -313,7 +333,7 @@ if VERBOSE:
     display(color_scale)
 
 
-# In[16]:
+# In[17]:
 
 
 def get_net_migration_tooltip_by_citizenship(citizenship: str) -> str:
@@ -360,20 +380,7 @@ if VERBOSE:
         get_net_migration_tooltip_by_citizenship("Antarctica"))))
 
 
-# ## Choropleth Map of the Net Migration of Georgia by Citizenship
-# 
-# 
-# Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
-# - **Stateless** bar: Shows net migration of stateless persons who do not have citizenship of any country.
-# - **Not stated** bar: Shows net migration of persons whos citizenship is not indicated in the data.
-# - **Other** bar: Shows net migration of persons who were identified as citizens of some particular country other than the ones listed by the Geostat in the published data.
-# - **Total** bar: Shows total net migration of Georgia over the given period of time which include all the migrants regardless of citizenship.
-# 
-# *Tip: Hover the bars or different countries in the given choropleth map with your mouse in order to get a tooltip showing the relevant details.*
-# 
-# 
-
-# In[17]:
+# In[18]:
 
 
 tbilisi_coordinate = [41.69339329182433, 44.80151746492941]
@@ -462,29 +469,65 @@ folium.LayerControl().add_to(m)
 Fullscreen().add_to(m)
 
 
-display(m)
+# display(m)
+pass
 
 
-# In[18]:
+# In[19]:
+
+
+##
+# Send it back to the beggining of the notebook instead of displaying it here:
+##
+map_html_str = normalize(
+    m.get_root().render()
+).replace('\\', '\\\\').replace('"', '\\"').replace("</script>", "<\/script>")
+display(HTML("""<script type="application/javascript">
+((fn)=>{
+  if (document.readyState != 'loading'){
+    fn();
+} else {
+    document.addEventListener('DOMContentLoaded', fn);
+}
+})(()=>{
+let map_container = document.getElementById("net-migration-map-container");
+while(map_container.firstChild)
+  map_container.removeChild(map_container.firstChild);
+let iframe = document.createElement('iframe');
+map_container.style = "position:relative;width:100%;height:0;padding-bottom:60%;";
+iframe.style = "position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;";
+iframe.allowfullscreen = true;
+map_container.appendChild(iframe);
+iframe.contentDocument.open();
+"""f"""
+iframe.contentDocument.write("{map_html_str}");
+""""""
+iframe.contentDocument.close();
+});
+</script>
+"""))
+
+
+# In[20]:
 
 
 print(f"\n ** Total Elapsed time: {datetime.utcnow() - nb_st} ** \n")
 print(f"Notebook END time: {datetime.utcnow()} UTC\n")
 
 
-# In[19]:
+# In[21]:
 
 
 get_ipython().run_cell_magic('capture', '', '%mkdir OGP_classic\n')
 
 
-# In[20]:
+# In[22]:
 
 
 get_ipython().run_cell_magic('capture', '', '%%file "OGP_classic/conf.json"\n{\n  "base_template": "classic",\n  "preprocessors": {\n    "500-metadata": {\n      "type": "nbconvert.preprocessors.ClearMetadataPreprocessor",\n      "enabled": true,\n      "clear_notebook_metadata": true,\n      "clear_cell_metadata": true\n    },\n    "900-files": {\n      "type": "nbconvert.preprocessors.ExtractOutputPreprocessor",\n      "enabled": true\n    }\n  }\n}\n')
 
 
-# In[21]:
+# In[23]:
 
 
 get_ipython().run_cell_magic('capture', '', '%%file "OGP_classic/index.html.j2"\n{%- extends \'classic/index.html.j2\' -%}\n{%- block html_head -%}\n\n{#  OGP attributes for shareability #}\n<meta property="og:url"          content="https://sentinel-1.github.io/net_migration_map_Georgia/" />\n<meta property="og:type"         content="article" />\n<meta property="og:title"        content="Net Migration Map of Georgia" />\n<meta property="og:description"  content="Choropleth Map of the Net Migration of Georgia by Citizenship" />\n<meta property="og:image"        content="https://raw.githubusercontent.com/sentinel-1/net_migration_map_Georgia/master/screenshots/2022-06-28_(1200x628).png" />\n<meta property="og:image:alt"    content="Screen Shot of the resulting map" />\n<meta property="og:image:type"   content="image/png" />\n<meta property="og:image:width"  content="1200" />\n<meta property="og:image:height" content="628" />\n    \n<meta property="article:published_time" content="2022-06-14T10:55:04+00:00" />\n<meta property="article:modified_time"  content="{{ resources.iso8610_datetime_now }}" />\n<meta property="article:publisher"      content="https://sentinel-1.github.io" />\n<meta property="article:author"         content="https://github.com/sentinel-1" />\n<meta property="article:section"        content="datascience" />\n<meta property="article:tag"            content="datascience" />\n<meta property="article:tag"            content="geospatialdata" />\n<meta property="article:tag"            content="Python" />\n<meta property="article:tag"            content="data" />\n<meta property="article:tag"            content="analytics" />\n<meta property="article:tag"            content="datavisualization" />\n<meta property="article:tag"            content="bigdataunit" />\n<meta property="article:tag"            content="visualization" />\n<meta property="article:tag"            content="migration" />\n<meta property="article:tag"            content="Georgia" />\n    \n    \n{{ super() }}\n\n{%- endblock html_head -%}\n    \n    \n{% block body_header %}\n<body>\n    \n<div class="container">\n  <nav class="navbar navbar-default">\n    <div class="container-fluid">\n      <ul class="nav nav-pills  navbar-left">\n        <li role="presentation">\n          <a href="/">\n            <svg xmlns="http://www.w3.org/2000/svg"\n                 viewBox="0 0 576 512" width="1em">\n              <path \n                fill="#999999"\nd="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288 0,288 Z"\n              />\n            </svg> Home\n          </a>\n        </li>\n      </ul>\n      <ul class="nav nav-pills  navbar-right">\n        <li role="presentation" class="active">\n          <a href="/net_migration_map_Georgia/">🇬🇧 English </a>\n        </li>\n        <li role="presentation">\n          <a href="/net_migration_map_Georgia/ka/">🇬🇪 ქართული</a>\n        </li>\n      </ul>\n    </div>\n  </nav>\n</div>\n\n\n\n  <div tabindex="-1" id="notebook" class="border-box-sizing">\n    <div class="container" id="notebook-container">    \n{% endblock body_header %}\n\n{% block body_footer %}\n    </div>\n  </div>\n  <footer>\n    <div class="container"\n         style="display:flex; flex-direction: row; justify-content: center; align-items: center;">\n      <p style="margin: 3.7em auto;"> © 2022\n        <a href="https://github.com/sentinel-1" target="_blank">Sentinel-1</a>\n      </p>\n      <!-- TOP.GE ASYNC COUNTER CODE -->\n      <div id="top-ge-counter-container" data-site-id="116052"\n           style="margin-right: 3.7em;float: right;"></div>\n      <script async src="//counter.top.ge/counter.js"></script>\n      <!-- / END OF TOP.GE COUNTER CODE -->\n     </div>\n  </footer>\n</body>\n{% endblock body_footer %}\n')
