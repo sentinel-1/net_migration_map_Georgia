@@ -24,6 +24,12 @@ DOCS_DIR="${SCRIPT_DIR}/docs"
   --to html --output-dir="${DOCS_DIR}" --output="index" --template OGP_classic
 
 ##
+# Update the map.html
+##
+cp -f map.html "${DOCS_DIR}"
+
+
+##
 # Generate PDF
 ##
 "${ENV_BIN}jupyter-nbconvert" "${NOTEBOOK_NAME}" \

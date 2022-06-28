@@ -1,6 +1,9 @@
 env_*/
 .jupyter/
 
+# Automatically generated map.html
+/map.html
+
 # Automatically generated html template for nbconvert
 OGP_classic/
 

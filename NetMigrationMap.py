@@ -10,8 +10,16 @@
 # In[1]:
 
 
-from IPython.display import display, HTML
-display(HTML("""<div id="net-migration-map-container"></div>"""))
+from IPython.display import display, HTML, IFrame
+
+map_html = HTML(
+    '<div style="position:relative;width:100%;height:0;padding-bottom:60%;"'
+    '  id="net-migration-map-container" >')
+map_html.data += IFrame(src="map.html", width='100%', height='100%', extras=[
+    'style="position:absolute;width:100%;height:100%;left:0;top:0;'
+    'border:none !important;"', 'allowfullscreen',
+])._repr_html_() + '</div>'
+display(map_html)
 
 
 # \* Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map above in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
@@ -477,35 +485,11 @@ pass
 
 
 ##
-# Send it back to the beggining of the notebook instead of displaying it here:
+# Instead of displaying here save the map as static `map.html` file
+# in order to display in the beggining of this notebook.
+# FIXME: This approach may require 2x run of notebook to update the map
 ##
-map_html_str = normalize(
-    m.get_root().render()
-).replace('\\', '\\\\').replace('"', '\\"').replace("</script>", "<\/script>")
-display(HTML("""<script type="application/javascript">
-((fn)=>{
-  if (document.readyState != 'loading'){
-    fn();
-} else {
-    document.addEventListener('DOMContentLoaded', fn);
-}
-})(()=>{
-let map_container = document.getElementById("net-migration-map-container");
-while(map_container.firstChild)
-  map_container.removeChild(map_container.firstChild);
-let iframe = document.createElement('iframe');
-map_container.style = "position:relative;width:100%;height:0;padding-bottom:60%;";
-iframe.style = "position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;";
-iframe.allowfullscreen = true;
-map_container.appendChild(iframe);
-iframe.contentDocument.open();
-"""f"""
-iframe.contentDocument.write("{map_html_str}");
-""""""
-iframe.contentDocument.close();
-});
-</script>
-"""))
+m.save("map.html")
 
 
 # In[20]:
