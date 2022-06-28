@@ -1,4 +1,7 @@
-# Choropleth Map of Net Migration of Georgia by Citizenship
+# Net Migration Map of Georgia by Citizenship
+
+Generating choropleth map of the net migration of Georgia by citizenship.
+
 
 Screen Shot of the resulting map:
 
