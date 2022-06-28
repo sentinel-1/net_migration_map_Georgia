@@ -12,7 +12,7 @@
 <meta property="og:image:height" content="628" />
     
 <meta property="article:published_time" content="2022-06-14T10:55:04+00:00" />
-<meta property="article:modified_time"  content="2022-06-28T12:40:47+00:00" />
+<meta property="article:modified_time"  content="2022-06-28T13:09:35+00:00" />
 <meta property="article:publisher"      content="https://sentinel-1.github.io" />
 <meta property="article:author"         content="https://github.com/sentinel-1" />
 <meta property="article:section"        content="datascience" />
@@ -13192,12 +13192,12 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 <span class="n">map_html</span> <span class="o">=</span> <span class="n">HTML</span><span class="p">(</span>
     <span class="s1">&#39;&lt;div style=&quot;position:relative;width:100%;height:0;padding-bottom:60%;&quot;&#39;</span>
     <span class="s1">&#39;  id=&quot;net-migration-map-container&quot; &gt;&#39;</span>
-    <span class="s1">&#39;&lt;div class=&quot;loader&quot; id=&quot;map-loading-spinner&quot;&gt;&lt;/div&gt;&#39;</span>
+    <span class="s1">&#39;&lt;div class=&quot;loader&quot; id=&quot;net-migration-map-spinner&quot;&gt;&lt;/div&gt;&#39;</span>
 <span class="p">)</span>
 <span class="n">map_html</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s2">&quot;map.html&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="p">[</span>
     <span class="s1">&#39;style=&quot;position:absolute;width:100%;height:100%;left:0;top:0;&#39;</span>
     <span class="s1">&#39;border:none !important;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;allowfullscreen&#39;</span><span class="p">,</span>
-    <span class="sd">&#39;&#39;&#39;onload=&quot;javascript:document.getElementById(&#39;map-loading-spinner&#39;).style.display=&#39;none&#39;;&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;onload=&quot;javascript:document.getElementById(&#39;net-migration-map-spinner&#39;).style.display=&#39;none&#39;;&quot;&#39;&#39;&#39;</span>
 <span class="p">])</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&lt;/div&gt;&#39;</span>
 <span class="n">display</span><span class="p">(</span><span class="n">map_html</span><span class="p">)</span>
 </pre></div>
@@ -13254,14 +13254,14 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 
 
 
-<div class="output_html rendered_html output_subarea "><div style="position:relative;width:100%;height:0;padding-bottom:60%;"  id="net-migration-map-container" ><div class="loader" id="map-loading-spinner"></div>
+<div class="output_html rendered_html output_subarea "><div style="position:relative;width:100%;height:0;padding-bottom:60%;"  id="net-migration-map-container" ><div class="loader" id="net-migration-map-spinner"></div>
         <iframe
             width="100%"
             height="100%"
             src="map.html"
             frameborder="0"
             allowfullscreen
-            style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen onload="javascript:document.getElementById('map-loading-spinner').style.display='none';
+            style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen onload="javascript:document.getElementById('net-migration-map-spinner').style.display='none';"
         ></iframe>
         </div></div>
 
@@ -13339,7 +13339,7 @@ duration of 183 days of residence inside the country during the twelve months be
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-Notebook START time: 2022-06-28 12:36:52.853681 UTC
+Notebook START time: 2022-06-28 12:58:00.023934 UTC
 
 </pre>
 </div>
@@ -14000,9 +14000,9 @@ Given migration data covers the interval of time from 2012 to 2021 (inclusive).
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
- ** Total Elapsed time: 0:00:09.156247 ** 
+ ** Total Elapsed time: 0:00:09.476984 ** 
 
-Notebook END time: 2022-06-28 12:37:02.009997 UTC
+Notebook END time: 2022-06-28 12:58:09.500976 UTC
 
 </pre>
 </div>
