@@ -12,7 +12,7 @@
 <meta property="og:image:height" content="628" />
     
 <meta property="article:published_time" content="2022-06-14T10:55:04+00:00" />
-<meta property="article:modified_time"  content="2022-06-29T07:22:56+00:00" />
+<meta property="article:modified_time"  content="2022-06-29T07:45:51+00:00" />
 <meta property="article:publisher"      content="https://sentinel-1.github.io" />
 <meta property="article:author"         content="https://github.com/sentinel-1" />
 <meta property="article:section"        content="datascience" />
@@ -13356,9 +13356,9 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 
 
 
-<div id="c11798e7-9b1e-490e-9241-e0dc8fc71acc" class="output_subarea output_javascript ">
+<div id="0fd43fad-9e2b-4249-aded-ce7956cff47b" class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#c11798e7-9b1e-490e-9241-e0dc8fc71acc');
+var element = $('#0fd43fad-9e2b-4249-aded-ce7956cff47b');
 
 ((fn)=>{
   if (document.readyState != 'loading') {
@@ -13456,7 +13456,7 @@ duration of 183 days of residence inside the country during the twelve months be
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-Notebook START time: 2022-06-29 07:19:47.941422 UTC
+Notebook START time: 2022-06-29 07:43:48.715283 UTC
 
 </pre>
 </div>
@@ -13983,7 +13983,8 @@ Given migration data covers the interval of time from 2012 to 2021 (inclusive).
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tbilisi_coordinate</span> <span class="o">=</span> <span class="p">[</span><span class="mf">41.69339329182433</span><span class="p">,</span> <span class="mf">44.80151746492941</span><span class="p">]</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">tbilisi_coordinate</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">tbilisi_coordinate</span><span class="p">,</span>
+               <span class="n">zoom_start</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">scrollWheelZoom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">color_scale</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
@@ -14061,6 +14062,12 @@ Given migration data covers the interval of time from 2012 to 2021 (inclusive).
 <span class="s2">    </span><span class="se">}}</span><span class="s2">;</span>
 <span class="s2">    zoomText();</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.on(&quot;zoomend&quot;, () =&gt; </span><span class="se">{{</span><span class="s2">zoomText();</span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">    </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.on(&#39;click&#39;,</span>
+<span class="s2">                      () =&gt; </span><span class="se">{{</span><span class="s2"> </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.scrollWheelZoom.enable(); </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">    </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.on(&#39;mouseout&#39;,</span>
+<span class="s2">                      () =&gt; </span><span class="se">{{</span><span class="s2"> </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.scrollWheelZoom.disable(); </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">    </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.on(&#39;blur&#39;,</span>
+<span class="s2">                      () =&gt; </span><span class="se">{{</span><span class="s2"> </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.scrollWheelZoom.disable(); </span><span class="se">}}</span><span class="s2">);</span>
 <span class="se">}}</span><span class="s2">;</span>
 <span class="s2">&lt;/script&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">))</span>
@@ -14119,9 +14126,9 @@ Given migration data covers the interval of time from 2012 to 2021 (inclusive).
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
- ** Total Elapsed time: 0:00:08.523532 ** 
+ ** Total Elapsed time: 0:00:09.078434 ** 
 
-Notebook END time: 2022-06-29 07:19:56.465014 UTC
+Notebook END time: 2022-06-29 07:43:57.793774 UTC
 
 </pre>
 </div>
