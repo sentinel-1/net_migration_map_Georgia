@@ -23,6 +23,11 @@ display(HTML("""
   max-width: 100%;
 }
 
+.net-migration-map-cell .prompt,
+.net-migration-map-cell div[class$="-prompt"] {
+  display: none;
+}
+
 .loader {
   border: 12px solid #f3f3f3;
   border-radius: 50%;
