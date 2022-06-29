@@ -53,3 +53,28 @@ if [ "${UPDATED_404_TODAY}" != "True" ];then
 else
     echo "SKIPPING custom 404 page update"
 fi
+
+
+##
+# Commit the "Generate updated docs" if requested
+##
+if [ "${1}" == "commit" ];then
+    echo
+    echo "** You requested to make the \"Generate updated docs\" commit in addition."
+    echo
+    while true;do
+        read -p "Do you want to continue? [Y/n] " yn
+        case ${yn} in
+            [Yy]*) break ;;
+            [Nn]*) echo "Abort."; exit -1 ;;
+        esac
+    done
+    echo " - Resetting the git stating area"
+    git reset
+    echo " - Adding the ./docs/ directory to the git staging area"
+    git add ./docs/
+    echo " - Making the \"Generate updated docs\" commit"
+    git commit -m "Generate updated docs"
+    echo " - done commiting the \"Generate updated docs\""
+fi
+
