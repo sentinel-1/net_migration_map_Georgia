@@ -15,11 +15,14 @@ display(HTML("""
 <style>
 .net-migration-map-cell {
   padding: 0 !important;
+  width: calc(100% + 30px) !important;
+  margin-left: -15px !important;
 }
 
 .net-migration-map-cell .map-wrapper {
   padding: 0;
   margin: 0;
+  width: 100%;
   max-width: 100%;
 }
 
