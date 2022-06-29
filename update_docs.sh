@@ -76,5 +76,8 @@ if [ "${1}" == "commit" ];then
     echo " - Making the \"Generate updated docs\" commit"
     git commit -m "Generate updated docs"
     echo " - done commiting the \"Generate updated docs\""
+else
+    echo "** You did NOT request to make the \"Generate updated docs\" commit in addition."
+    echo " - Pass the \"commit\" as an argument to this script in order to request the commit."
 fi
 
