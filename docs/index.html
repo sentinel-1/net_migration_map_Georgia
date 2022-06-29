@@ -12,7 +12,7 @@
 <meta property="og:image:height" content="628" />
     
 <meta property="article:published_time" content="2022-06-14T10:55:04+00:00" />
-<meta property="article:modified_time"  content="2022-06-29T04:47:48+00:00" />
+<meta property="article:modified_time"  content="2022-06-29T05:11:48+00:00" />
 <meta property="article:publisher"      content="https://sentinel-1.github.io" />
 <meta property="article:author"         content="https://github.com/sentinel-1" />
 <meta property="article:section"        content="datascience" />
@@ -13184,6 +13184,7 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 <span class="s2">  margin-left: -43px;</span>
 <span class="s2">  top: 50%;</span>
 <span class="s2">  margin-top: -43px;</span>
+<span class="s2">  z-index: 1000;</span>
 <span class="s2">}</span>
 
 <span class="s2">/* Safari */</span>
@@ -13207,7 +13208,8 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 <span class="n">map_html</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s2">&quot;map.html&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="p">[</span>
     <span class="s1">&#39;style=&quot;position:absolute;width:100%;height:100%;left:0;top:0;&#39;</span>
     <span class="s1">&#39;border:none !important;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;allowfullscreen&#39;</span><span class="p">,</span>
-    <span class="sd">&#39;&#39;&#39;onload=&quot;javascript:document.getElementById(&#39;net-migration-map-spinner&#39;).style.display=&#39;none&#39;;&quot;&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;onload=&quot;javascript:setTimeout(()=&gt;{document.getElementById(&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;&#39;net-migration-map-spinner&#39;).style.display=&#39;none&#39;;}, 2000)&quot; &quot;&quot;&quot;</span>
 <span class="p">])</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&lt;/div&gt;&#39;</span>
 <span class="n">display</span><span class="p">(</span><span class="n">map_html</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">Javascript</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
@@ -13271,6 +13273,7 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
   margin-left: -43px;
   top: 50%;
   margin-top: -43px;
+  z-index: 1000;
 }
 
 /* Safari */
@@ -13301,7 +13304,7 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
             src="map.html"
             frameborder="0"
             allowfullscreen
-            style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen onload="javascript:document.getElementById('net-migration-map-spinner').style.display='none';"
+            style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen onload="javascript:setTimeout(()=>{document.getElementById('net-migration-map-spinner').style.display='none';}, 2000)" 
         ></iframe>
         </div></div>
 
@@ -13315,9 +13318,9 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 
 
 
-<div id="6aea91db-131f-4528-a30c-8f1c0d7a52a1" class="output_subarea output_javascript ">
+<div id="21994592-c19e-467a-a62b-edfdcd205263" class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#6aea91db-131f-4528-a30c-8f1c0d7a52a1');
+var element = $('#21994592-c19e-467a-a62b-edfdcd205263');
 
 ((fn)=>{
   if (document.readyState != 'loading') {
@@ -13415,7 +13418,7 @@ duration of 183 days of residence inside the country during the twelve months be
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-Notebook START time: 2022-06-29 04:45:34.623560 UTC
+Notebook START time: 2022-06-29 05:08:44.707732 UTC
 
 </pre>
 </div>
@@ -14076,9 +14079,9 @@ Given migration data covers the interval of time from 2012 to 2021 (inclusive).
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
- ** Total Elapsed time: 0:00:09.159106 ** 
+ ** Total Elapsed time: 0:00:09.820318 ** 
 
-Notebook END time: 2022-06-29 04:45:43.782750 UTC
+Notebook END time: 2022-06-29 05:08:54.528150 UTC
 
 </pre>
 </div>
