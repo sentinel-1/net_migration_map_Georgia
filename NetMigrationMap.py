@@ -100,7 +100,6 @@ while (cell.parentNode !== null
   cell = cell.parentNode;
 }
 cell.classList.add("net-migration-map-cell");
-console.log(cell)
 });
 """))
 
