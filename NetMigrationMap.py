@@ -475,7 +475,8 @@ if VERBOSE:
 
 
 tbilisi_coordinate = [41.69339329182433, 44.80151746492941]
-m = folium.Map(location=tbilisi_coordinate, zoom_start=6)
+m = folium.Map(location=tbilisi_coordinate,
+               zoom_start=6, scrollWheelZoom=False)
 
 color_scale.add_to(m)
 
@@ -553,6 +554,12 @@ window.onload = () => {{
     }};
     zoomText();
     {m.get_name()}.on("zoomend", () => {{zoomText();}});
+    {m.get_name()}.on('click',
+                      () => {{ {m.get_name()}.scrollWheelZoom.enable(); }});
+    {m.get_name()}.on('mouseout',
+                      () => {{ {m.get_name()}.scrollWheelZoom.disable(); }});
+    {m.get_name()}.on('blur',
+                      () => {{ {m.get_name()}.scrollWheelZoom.disable(); }});
 }};
 </script>
 """))
