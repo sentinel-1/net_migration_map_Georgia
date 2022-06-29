@@ -36,6 +36,7 @@ display(HTML("""
   margin-left: -43px;
   top: 50%;
   margin-top: -43px;
+  z-index: 1000;
 }
 
 /* Safari */
@@ -59,7 +60,8 @@ map_html = HTML(
 map_html.data += IFrame(src="map.html", width='100%', height='100%', extras=[
     'style="position:absolute;width:100%;height:100%;left:0;top:0;'
     'border:none !important;"', 'allowfullscreen',
-    '''onload="javascript:document.getElementById('net-migration-map-spinner').style.display='none';"'''
+    """onload="javascript:setTimeout(()=>{document.getElementById("""
+    """'net-migration-map-spinner').style.display='none';}, 2000)" """
 ])._repr_html_() + '</div>'
 display(map_html)
 display(Javascript("""
