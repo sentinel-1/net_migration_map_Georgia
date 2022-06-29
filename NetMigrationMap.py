@@ -10,9 +10,19 @@
 # In[1]:
 
 
-from IPython.display import display, HTML, IFrame
+from IPython.display import display, HTML, IFrame, Javascript
 display(HTML("""
 <style>
+.net-migration-map-cell {
+  padding: 0 !important;
+}
+
+.net-migration-map-cell .map-wrapper {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
 .loader {
   border: 12px solid #f3f3f3;
   border-radius: 50%;
@@ -52,6 +62,26 @@ map_html.data += IFrame(src="map.html", width='100%', height='100%', extras=[
     '''onload="javascript:document.getElementById('net-migration-map-spinner').style.display='none';"'''
 ])._repr_html_() + '</div>'
 display(map_html)
+display(Javascript("""
+((fn)=>{
+  if (document.readyState != 'loading') {
+    fn();
+} else {
+    document.addEventListener('DOMContentLoaded', fn);
+}
+})(()=>{
+let map_container = document.getElementById("net-migration-map-container");
+let cell = map_container.parentNode;
+while (cell.parentNode !== null
+       && !cell.classList.contains("cell")
+       && !cell.classList.contains("jp-Cell-outputArea")) {
+  cell.classList.add("map-wrapper");
+  cell = cell.parentNode;
+}
+cell.classList.add("net-migration-map-cell");
+console.log(cell)
+});
+"""))
 
 
 # \* Four bars (like a sandwitch) are placed in the Black Sea near the Georgia on the map above in order to reflect information about the data that is not associated with a citizenship of any particular country, such as:
