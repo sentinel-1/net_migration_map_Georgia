@@ -4,6 +4,7 @@
 VENV_NAME=env_net_migration_map_Georgia
 
 NOTEBOOK_NAME="NetMigrationMap.ipynb"
+NOTEBOOK_NAME_KA="ნეტ_მიგრაციის_რუკა.ipynb"
 
 
 SELF=$(python3 -c "import os; print(os.path.realpath('${BASH_SOURCE[0]}'))")
@@ -14,6 +15,7 @@ export JUPYTER_CONFIG_DIR="${SCRIPT_DIR}/.jupyter"
 
 
 DOCS_DIR="${SCRIPT_DIR}/docs"
+DOCS_DIR_KA="${SCRIPT_DIR}/docs/ka"
 
 
 ##
@@ -24,9 +26,22 @@ DOCS_DIR="${SCRIPT_DIR}/docs"
   --to html --output-dir="${DOCS_DIR}" --output="index" --template OGP_classic
 
 ##
+# Generate HTML (ka_GE)
+##
+"${ENV_BIN}jupyter-nbconvert" "${NOTEBOOK_NAME_KA}" \
+  --config "${JUPYTER_CONFIG_DIR}/jupyter_lab_config.py" \
+  --to html --output-dir="${DOCS_DIR_KA}" --output="index" --template OGP_classic_ka
+
+
+##
 # Update the map.html
 ##
 cp -f map.html "${DOCS_DIR}"
+
+##
+# Update the map.html (ka_GE)
+##
+cp -f map.html "${DOCS_DIR_KA}"
 
 
 ##
@@ -34,6 +49,7 @@ cp -f map.html "${DOCS_DIR}"
 ##
 "${ENV_BIN}jupyter-nbconvert" "${NOTEBOOK_NAME}" \
   --embed-images --to pdf --output-dir="${DOCS_DIR}"
+
 
 ##
 # Update custom 404 page
