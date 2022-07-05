@@ -4,7 +4,7 @@
 VENV_NAME=env_net_migration_map_Georgia
 
 NOTEBOOK_NAME="NetMigrationMap.ipynb"
-NOTEBOOK_NAME_KA="ნეტ_მიგრაციის_რუკა.ipynb"
+NOTEBOOK_NAME_KA="გარე მიგრაციული სალდოს რუკა.ipynb"
 
 
 SELF=$(python3 -c "import os; print(os.path.realpath('${BASH_SOURCE[0]}'))")
