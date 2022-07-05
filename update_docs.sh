@@ -69,7 +69,7 @@ if [ "${1}" == "commit" ];then
             [Nn]*) echo "Abort."; exit -1 ;;
         esac
     done
-    echo " - Resetting the git stating area"
+    echo " - Resetting the git staging area"
     git reset
     echo " - Adding the ./docs/ directory to the git staging area"
     git add ./docs/
